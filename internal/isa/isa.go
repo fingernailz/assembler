@@ -4,6 +4,7 @@ import "github.com/fingernailz/assembler/internal/models"
 
 type Registers map[string]string
 
+// idk why i have this figgure it otu
 const (
 	R_FORMAT  = "R-FORMAT"
 	I_FORMAT  = "I-FORMAT"

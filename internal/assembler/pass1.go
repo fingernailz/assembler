@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/fingernailz/assembler/internal/formats"
 	"github.com/fingernailz/assembler/internal/isa"
 )
 
@@ -23,6 +24,7 @@ type Assembler struct {
 	SymbolTable map[string]int
 
 	// stores the well instructions, instructionstable is a better name but lets go with something new
+	// lol its just a array not a table
 	StatementTable []string // I hope this is fine, dk what else data structrue to use for fix later ig????/
 }
 
@@ -93,3 +95,38 @@ func (asm *Assembler) CreateFINDNAME(programArray []string) {
 
 //labels are not encoded in machine code, we go to the next insturction present in the label
 // for jumps. fix this in the function
+
+// again lol find perfect or smoewhat perfect name
+func (asm *Assembler) pass2() string {
+	finalIns, err := formats.CreateFormats(asm.StatementTable, &asm.SymbolTable)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var outputBinary strings.Builder
+	var temp string
+
+	for _, y := range finalIns.InstructionSet {
+		temp = y.ConvertToBinary()
+		outputBinary.WriteString(temp) // for loop wrt += is inefficient itseems idk chekc later
+	}
+
+	return outputBinary.String()
+}
+
+func CreateAssembler(filename string) *Assembler {
+	if filename == emptyString {
+		panic("error: empty string")
+	}
+
+	return &Assembler{
+		FileName: filename,
+	}
+}
+
+// this returns the final string of binary data
+func (asm *Assembler) Assemble() string {
+	asm.BuildSymbolicTable()
+	return asm.pass2()
+}

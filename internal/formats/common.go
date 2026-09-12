@@ -15,11 +15,21 @@ const (
 
 // rename this type later
 type NewTyep struct {
-	InstructionSet []*models.Instruction
+	// again no need for *models.Instruction
+	InstructionSet []models.Instruction
 	SymbolTablePtr *map[string]int
 }
 
-func CreateFormats(instructions []string, stptr *map[string]int) *NewTyep {
+// correct name, nope change
+func CreateFormats(instructions []string, stptr *map[string]int) (*NewTyep, error) {
+
+	formatType := NewTyep{}
+	formatType.SymbolTablePtr = stptr // this is for passing to the parser of certain formats
+
+	var (
+		ptr models.Instruction
+		err error
+	)
 
 	for _, instr := range instructions {
 
@@ -41,13 +51,22 @@ func CreateFormats(instructions []string, stptr *map[string]int) *NewTyep {
 
 		switch mappedValue["format"] {
 		case isa.R_FORMAT:
+			// a normal pointer satisfies models.Instruction
+			ptr, err = RFCreate(instr)
 		case isa.I_FORMAT:
 		case isa.D_FORMAT:
 		case isa.B_FORMAT:
 		case isa.CB_FORMAT:
 		case isa.IW_FORMAT:
 		}
+
+		if err != nil {
+			return nil, err
+		}
+
+		formatType.InstructionSet = append(formatType.InstructionSet, ptr)
+
 	}
 
-	return nil
+	return &formatType, err
 }

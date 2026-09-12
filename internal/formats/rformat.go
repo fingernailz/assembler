@@ -43,7 +43,7 @@ func RFCreate(instruction string) (*RFromat, error) {
 
 		//lmafoo alr its stupid as hell
 		insSlice[x] = strings.TrimSpace(strings.Trim(strings.TrimSpace(y), comma))
-		value, ok := registers.RegistersBin[insSlice[x]]
+		value, ok := registers.RegistersBin[strings.ToUpper(insSlice[x])]
 
 		if !ok {
 			return nil, nil // error agin
@@ -66,7 +66,7 @@ func RFCreate(instruction string) (*RFromat, error) {
 }
 
 func (rf *RFromat) ConvertToBinary() string {
-	binary := ""
+	binary := rf.Instruction + rf.DestinationRegister + rf.FirstRegister + rf.SecondRegister
 
 	return binary
 }

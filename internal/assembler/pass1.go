@@ -77,10 +77,12 @@ func (asm *Assembler) CreateFINDNAME(programArray []string) {
 			panic("The label is an instruction")
 		}
 
-		asm.SymbolTable[label] = locationCounter
-
-		locationCounter++
+		// the label will point towards the next insturction but we don't update the locationcounter itself if we find a valid label
+		asm.SymbolTable[label] = locationCounter + 1
 
 	}
 
 }
+
+//labels are not encoded in machine code, we go to the next insturction present in the label
+// for jumps. fix this in the function

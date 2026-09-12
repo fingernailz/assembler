@@ -7,6 +7,13 @@ import (
 	"github.com/fingernailz/assembler/internal/isa"
 )
 
+const (
+	labelSuffix string = ":"
+	newLine     string = "\n"
+	space       string = " "
+	emptyString string = ""
+)
+
 /*
 	we allocate 64 bits for the label and 32 bits for normal instructiosn
 */
@@ -29,7 +36,7 @@ func (asm *Assembler) BuildSymbolicTable() {
 
 	stringData := string(data)
 
-	splitStringData := strings.Split(stringData, "\n")
+	splitStringData := strings.Split(stringData, newLine)
 
 	asm.CreateFINDNAME(splitStringData)
 
@@ -46,7 +53,7 @@ func (asm *Assembler) CreateFINDNAME(programArray []string) {
 
 		//idk why but doing it anyways
 
-		if line == "" {
+		if line == emptyString {
 			continue
 		}
 
@@ -54,7 +61,7 @@ func (asm *Assembler) CreateFINDNAME(programArray []string) {
 		// as of now I will just see if the label is not named after any instruction, ends with : and is not repeated again via the symbol table
 
 		//change the hard coded value to a const
-		if !strings.HasSuffix(line, ":") {
+		if !strings.HasSuffix(line, labelSuffix) {
 			asm.StatementTable = append(asm.StatementTable, line)
 			locationCounter++
 			continue
@@ -66,12 +73,12 @@ func (asm *Assembler) CreateFINDNAME(programArray []string) {
 		}
 
 		// something like "asd DFdf:" should throw error and "adf :" should not idk how to do this, lets rawdog this
-		if xs := strings.Split(line, " "); len(xs) != 1 && xs[1] != ":" {
+		if xs := strings.Split(line, space); len(xs) != 1 && xs[1] != labelSuffix {
 			panic("errors name that I couldnt explain")
 		}
 
 		//checks if the word is an instruction from the isa package
-		label := strings.TrimRight(line, ":")
+		label := strings.TrimRight(line, labelSuffix)
 
 		if _, ok := isa.Instructions[label]; ok {
 			panic("The label is an instruction")

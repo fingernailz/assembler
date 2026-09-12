@@ -10,6 +10,7 @@ import (
 const (
 	emptyString string = ""
 	space       string = " "
+	comma       string = ","
 )
 
 // rename this type later

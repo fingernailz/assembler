@@ -60,6 +60,7 @@ func (asm *Assembler) CreateFINDNAME(programArray []string) {
 			continue
 		}
 
+		// redundency label
 		if _, ok := asm.SymbolTable[line]; !ok {
 			panic("same label has been ridden twice")
 		}

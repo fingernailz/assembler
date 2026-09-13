@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	asm := assembler.CreateAssembler("what.asm")
+	asm := assembler.CreateAssemblerFile("what.asm")
 	log.Println(asm.Assemble())
 }

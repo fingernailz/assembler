@@ -20,17 +20,19 @@ const (
 */
 
 type Assembler struct {
-	FileName    string //along with the extension
+	//privating this
+	fileName    string //along with the extension
 	SymbolTable map[string]int
 
 	// stores the well instructions, instructionstable is a better name but lets go with something new
 	// lol its just a array not a table
-	StatementTable []string // I hope this is fine, dk what else data structrue to use for fix later ig????/
+	StatementTable   []string // I hope this is fine, dk what else data structrue to use for fix later ig????/
+	InstructionArray []string // all the lines
 }
 
-func (asm *Assembler) BuildSymbolicTable() {
+func (asm *Assembler) buildSymbolicTable() {
 
-	data, err := os.ReadFile(asm.FileName)
+	data, err := os.ReadFile(asm.fileName)
 
 	if err != nil {
 		panic(err)
@@ -40,13 +42,21 @@ func (asm *Assembler) BuildSymbolicTable() {
 
 	splitStringData := strings.Split(stringData, newLine)
 
-	asm.CreateFINDNAME(splitStringData)
+	asm.InstructionArray = splitStringData
+
+	asm.CreateFINDNAME()
 
 }
 
 // idk what I have to name this function as!!!!
-func (asm *Assembler) CreateFINDNAME(programArray []string) {
+func (asm *Assembler) CreateFINDNAME() {
 	var locationCounter int = 0
+
+	programArray := asm.InstructionArray
+
+	if len(programArray) == 0 {
+		panic("error with program error")
+	}
 
 	for _, line := range programArray {
 
@@ -115,18 +125,37 @@ func (asm *Assembler) pass2() string {
 	return outputBinary.String()
 }
 
-func CreateAssembler(filename string) *Assembler {
+func CreateAssemblerFile(filename string) *Assembler {
+
 	if filename == emptyString {
-		panic("error: empty string")
+		panic("error: empty string and data")
 	}
 
 	return &Assembler{
-		FileName: filename,
+		fileName:         filename,
+		InstructionArray: nil,
+	}
+}
+
+func CreateAssemblerServer(data []string) *Assembler {
+
+	if len(data) == 0 {
+		return nil
+	}
+
+	return &Assembler{
+		InstructionArray: data,
+		fileName:         emptyString,
 	}
 }
 
 // this returns the final string of binary data
 func (asm *Assembler) Assemble() string {
-	asm.BuildSymbolicTable()
+	if asm.fileName == emptyString {
+		asm.buildSymbolicTable()
+	} else {
+		asm.CreateFINDNAME()
+	}
+
 	return asm.pass2()
 }

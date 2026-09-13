@@ -8,9 +8,11 @@ import (
 )
 
 const (
-	emptyString string = ""
-	space       string = " "
-	comma       string = ","
+	emptyString  string = ""
+	space        string = " "
+	comma        string = ","
+	DOUBLE_COLON string = ":"
+	HASHTAG      string = "#"
 )
 
 // rename this type later
@@ -54,6 +56,7 @@ func CreateFormats(instructions []string, stptr *map[string]int) (*NewTyep, erro
 			// a normal pointer satisfies models.Instruction
 			ptr, err = RFCreate(instr)
 		case isa.I_FORMAT:
+			ptr, err = IFCreate(instr)
 		case isa.D_FORMAT:
 		case isa.B_FORMAT:
 		case isa.CB_FORMAT:

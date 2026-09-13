@@ -1,1 +1,2 @@
 ADD X1, X2, X3
+ADDI X1, X2, #12

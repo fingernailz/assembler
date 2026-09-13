@@ -26,7 +26,7 @@ type IFormat struct {
 }
 
 func (iform *IFormat) ConvertToBinary() string {
-	binaryOutput := iform.Instruction + iform.DestinationRegister + iform.FirstRegister + iform.ImmediateValue
+	binaryOutput := iform.Instruction + iform.ImmediateValue + iform.DestinationRegister + iform.FirstRegister
 	return binaryOutput
 }
 
